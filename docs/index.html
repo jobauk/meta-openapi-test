@@ -3,17 +3,16 @@
   <head>
     <title>Scalar API Reference</title>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body class="dark-mode">
     <div id="app"></div>
     <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
-    <script>
-      Scalar.createApiReference('#app', {
-        url: './specs/v23/openapi.json',
-      })
+    <script type="module">
+      const sources = await fetch("./versions.json")
+        .then((res) => res.json())
+        .map((version) => ({ url: `./specs/${version}/openapi.json` }));
+      Scalar.createApiReference("#app", { sources });
     </script>
   </body>
 </html>
