@@ -11,7 +11,9 @@
     <script type="module">
       const sources = await fetch("./versions.json")
         .then((res) => res.json())
-        .map((version) => ({ url: `./specs/${version}/openapi.json` }));
+        .then((json) =>
+          json.map((version) => ({ url: `./specs/${version}/openapi.json` })),
+        );
       Scalar.createApiReference("#app", { sources });
     </script>
   </body>
