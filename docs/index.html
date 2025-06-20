@@ -7,15 +7,12 @@
       name="viewport"
       content="width=device-width, initial-scale=1" />
   </head>
-  <body>
+  <body class="dark-mode">
     <div id="app"></div>
     <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
     <script>
       Scalar.createApiReference('#app', {
         url: './specs/v23/openapi.json',
-        darkMode: true,
-        forceDarkModeState: 'dark',
-        hideDarkModeToggle: true,
       })
     </script>
   </body>
