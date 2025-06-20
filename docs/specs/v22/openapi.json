@@ -1,0 +1,324 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "Instagram Graph API",
+    "version": "23.0"
+  },
+  "servers": [
+    {
+      "url": "https://graph.facebook.com"
+    }
+  ],
+  "paths": {
+    "/{ig_media_id}": {
+      "get": {
+        "operationId": "get-ig-media",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ig_media_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Required. ID for the media to be published."
+          },
+          {
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated list of fields you want returned."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IGMedia"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "post-ig-media",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ig_media_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Required. ID for the media to be published."
+          },
+          {
+            "in": "query",
+            "name": "comment_enabled",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Required. Set to true to enable comments or false to disable comments."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "IGMedia": {
+        "type": "object",
+        "properties": {
+          "alt_text": {
+            "type": "string",
+            "description": "Descriptive text for images, for accessibility."
+          },
+          "boost_ads_list": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Offers an overview of all Instagram ad information associated with the organic media for ads with ACTIVE status. It includes relative ad ID and ad delivery status. Available for Instagram API with Facebook Login only."
+          },
+          "boost_eligibility_info": {
+            "type": "object",
+            "description": "The field provides information about boosting eligibility of a Instagram instagram media as an ad and additional details if not eligible. Available for Instagram API with Facebook Login only."
+          },
+          "caption": {
+            "type": "string",
+            "description": "Caption. Excludes album children. The @ symbol is excluded, unless the app user can perform admin-equivalent tasks on the Facebook Page connected to the Instagram account used to create the caption. Available for Instagram API with Facebook Login only."
+          },
+          "comments_count": {
+            "type": "number",
+            "description": "Count of comments on the media. Excludes comments on album child media and the media's caption. Includes replies on comments."
+          },
+          "copyright_check_information": {
+            "required": [
+              "status"
+            ],
+            "type": "object",
+            "properties": {
+              "copyright_matches": {
+                "type": "array",
+                "items": {
+                  "required": [
+                    "author",
+                    "content_title",
+                    "matched_segments",
+                    "owner_copyright_policy"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "author": {
+                      "type": "string",
+                      "description": "The name of the copyrighted video"
+                    },
+                    "content_title": {
+                      "type": "string",
+                      "description": "The author of the copyrighted video"
+                    },
+                    "matched_segments": {
+                      "type": "array",
+                      "items": {
+                        "required": [
+                          "duration_in_seconds",
+                          "segment_type",
+                          "start_time_in_seconds"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "duration_in_seconds": {
+                            "type": "number",
+                            "description": "The number of seconds the content violates copyright"
+                          },
+                          "segment_type": {
+                            "enum": [
+                              "AUDIO",
+                              "VIDEO"
+                            ],
+                            "type": "string",
+                            "description": "Either AUDIO or VIDEO"
+                          },
+                          "start_time_in_seconds": {
+                            "type": "number",
+                            "description": "Set to the start time of the video"
+                          }
+                        }
+                      }
+                    },
+                    "owner_copyright_policy": {
+                      "required": [
+                        "actions",
+                        "name"
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "required": [
+                              "action",
+                              "geos",
+                              "territories"
+                            ],
+                            "type": "object",
+                            "properties": {
+                              "action": {
+                                "enum": [
+                                  "BLOCK",
+                                  "MUTE"
+                                ],
+                                "type": "string",
+                                "description": "The mitigation action taken against the video violating copyright. Different mitigation steps can be taken for different countries. Can be one of the following values:\nBLOCK – The video is blocked from the audiences listed in the geos array\nMUTE - The video is muted for audiences listed in the geos array"
+                              },
+                              "geos": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "territories": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "description": "An array of action objects with the mitigations steps taken defined by the copyright owner's policy. May include different mitigations steps for different locations."
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The name for the copyright owners' policy"
+                        }
+                      }
+                    }
+                  }
+                },
+                "description": "If a video is violating copyright, the copyright_matches is returned with an array of objects about the copyrighted material, when the violation is occurring in the video, and the actions take to mitigate the violation."
+              },
+              "status": {
+                "required": [
+                  "matches_found",
+                  "status"
+                ],
+                "type": "object",
+                "properties": {
+                  "matches_found": {
+                    "type": "boolean",
+                    "description": "Set to one of the following:\nfalse if the video does not violate copyright,\ntrue if the video does violate copyright"
+                  },
+                  "status": {
+                    "enum": [
+                      "completed",
+                      "error",
+                      "in_progress",
+                      "not_started"
+                    ],
+                    "type": "string",
+                    "description": "Set to completed, error, in_progress, or not_started"
+                  }
+                }
+              }
+            }
+          },
+          "id": {
+            "type": "string",
+            "description": "Media ID."
+          },
+          "is_comment_enabled": {
+            "type": "boolean",
+            "description": "Indicates if comments are enabled or disabled. Excludes album children."
+          },
+          "is_shared_to_feed": {
+            "type": "boolean",
+            "description": "For Reels only. When true, indicates that the reel can appear in both the Feed and Reels tabs. When false, indicates that the reel can only appear in the Reels tab.\nNeither value determines whether the reel actually appears in the Reels tab because the reel may not meet eligibilty requirements or may not be selected by our algorithm. See reel specifications for eligibility critera."
+          },
+          "legacy_instagram_media_id": {
+            "type": "string",
+            "description": "The ID for Instagram media that was created for Marketing API endpoints for v21.0 and older."
+          },
+          "like_count": {
+            "type": "number",
+            "description": "Count of likes on the media, including replies on comments. Excludes likes on album child media and likes on promoted posts created from the media.\nIf queried indirectly through another endpoint or field expansion the like_count field is omitted if the media owner has hidden like counts."
+          },
+          "media_product_type": {
+            "enum": [
+              "AD",
+              "FEED",
+              "STORY",
+              "REELS"
+            ],
+            "type": "string",
+            "description": "Surface where the media is published. Can be AD, FEED, STORY or REELS. Available for Instagram API with Facebook Login only."
+          },
+          "media_type": {
+            "enum": [
+              "CAROUSEL_ALBUM",
+              "IMAGE",
+              "VIDEO"
+            ],
+            "type": "string",
+            "description": "Media type. Can be CAROUSEL_ALBUM, IMAGE, or VIDEO."
+          },
+          "media_url": {
+            "type": "string",
+            "description": "The URL for the media.\nThe media_url field is omitted from responses if the media contains copyrighted material or has been flagged for a copyright violation. Examples of copyrighted material can include audio on reels.",
+            "format": "uri"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Instagram user ID who created the media. Only returned if the app user making the query also created the media; otherwise, username field is returned instead."
+          },
+          "permalink": {
+            "type": "string",
+            "description": "Permanent URL to the media.",
+            "format": "uri"
+          },
+          "shortcode": {
+            "type": "string",
+            "description": "Shortcode to the media."
+          },
+          "thumbnail_url": {
+            "type": "string",
+            "description": "Media thumbnail URL. Only available on VIDEO media.",
+            "format": "uri"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "ISO8601-formatted creation date in UTC (default is UTC ±00:00).",
+            "format": "date-time"
+          },
+          "username": {
+            "type": "string",
+            "description": "Username of user who created the media."
+          },
+          "view_count": {
+            "type": "number",
+            "description": "View count for Instagram reels. Available for Business Discovery API only."
+          }
+        },
+        "description": "Represents an Instagram album, photo, or video (uploaded video, live video, reel, or story)."
+      }
+    }
+  }
+}
