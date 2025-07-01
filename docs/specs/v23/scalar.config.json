@@ -1,0 +1,16 @@
+{
+  "$schema": "https://cdn.scalar.com/schema/scalar-config.json",
+  "subdomain": "guides",
+  "guides": [
+    {
+      "name": "Instagram API Guides",
+      "sidebar": [
+        {
+          "path": "guides/create-ig-user-media.md",
+          "type": "page"
+        }
+      ]
+    }
+  ],
+  "references": []
+}
